@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catering — Ennieskitchen</title>
+<meta name="description" content="Nigerian catering for weddings, birthdays, corporate events and more across Gardena and Los Angeles. Request a custom catering quote.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <a href="index.html" class="brand">
+    <div class="brand-mark"><img src="images/logo.jpg" alt="Ennieskitchen logo"></div>
+    <div class="brand-text">Ennieskitchen<small>...just delicious</small></div>
+  </a>
+  <nav id="mainnav">
+    <a href="index.html"><span class="nav-dot"></span>Home</a>
+    <a href="menu.html"><span class="nav-dot"></span>Menu</a>
+    <a href="catering.html" class="active"><span class="nav-dot"></span>Catering</a>
+    <a href="about.html"><span class="nav-dot"></span>About</a>
+    <a href="contact.html"><span class="nav-dot"></span>Contact</a>
+    <a href="faq.html"><span class="nav-dot"></span>FAQ</a>
+  </nav>
+  <button class="cart-btn sidebar-cart" onclick="openCart()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+    Cart <span class="cart-count" id="cartCount">0</span>
+  </button>
+  <div class="sidebar-divider" aria-hidden="true"></div>
+  <div class="sidebar-contact">
+    <a href="tel:+13235786993">+1 (323) 578-6993</a>
+    <a href="https://wa.me/13235786993" target="_blank">WhatsApp order</a>
+  </div>
+  <p class="sidebar-note">Pickup only — Gardena, CA</p>
+</aside>
+
+<div class="nav-overlay" id="navOverlay" onclick="closeSidebar()"></div>
+
+<div class="mobile-topbar">
+  <button class="hamburger" onclick="openSidebar()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+  <a href="index.html" class="brand" style="gap:8px;">
+    <div class="brand-mark" style="width:30px;height:30px;font-size:15px;"><img src="images/logo.jpg" alt="Ennieskitchen logo"></div>
+    <div class="brand-text" style="font-size:16px;">Ennieskitchen</div>
+  </a>
+  <button class="cart-btn" onclick="openCart()" style="padding:7px 12px;">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+    <span class="cart-count" id="cartCountMobile">0</span>
+  </button>
+</div>
+
+<main class="main-content" id="mainContent">
+
+  <section style="padding-top:48px;">
+    <div class="wrap" style="max-width:640px;">
+      <h1 style="font-size:34px;margin-bottom:14px;">Nigerian catering for every occasion</h1>
+      <p style="color:var(--ink-soft);">Generous trays, authentic flavour and stress-free planning for events across Gardena and the Los Angeles area. Catering requires 48–72 hours minimum notice.</p>
+    </div>
+  </section>
+  <section style="padding-top:0;">
+    <div class="wrap">
+      <p class="eyebrow">We cater</p>
+      <h3 style="margin-bottom:18px;">Events we cook for</h3>
+      <div class="catering-events">
+        <span class="event-chip">Weddings</span>
+        <span class="event-chip">Birthdays</span>
+        <span class="event-chip">Corporate events</span>
+        <span class="event-chip">Baby showers</span>
+        <span class="event-chip">Graduations</span>
+        <span class="event-chip">Family gatherings</span>
+        <span class="event-chip">Outdoor events</span>
+        <span class="event-chip">Buffet services</span>
+        <span class="event-chip">Special events</span>
+      </div>
+
+      <h3 style="margin:20px 0 6px;">Request a catering quote</h3>
+      <p style="color:var(--ink-soft);font-size:14.5px;margin-bottom:24px;">Tell us about your event and we'll build a customized quote. Requests are sent to Ennieskitchen259@gmail.com.</p>
+
+      <form class="form-grid" onsubmit="submitCatering(event)">
+        <div class="field"><label>Full name <span class="req">*</span></label><input type="text" id="catName" required></div>
+        <div class="field"><label>Phone <span class="req">*</span></label><input type="tel" id="catPhone" required></div>
+        <div class="field"><label>Email</label><input type="email" id="catEmail"></div>
+        <div class="field"><label>Event type</label><input type="text" id="catType" placeholder="Wedding, birthday..."></div>
+        <div class="field"><label>Event date <span class="req">*</span></label><input type="date" id="catDate" required></div>
+        <div class="field"><label>Guest count</label><input type="number" id="catGuests" min="1"></div>
+        <div class="field"><label>Location</label><input type="text" id="catLocation"></div>
+        <div class="field"><label>Budget</label><input type="text" id="catBudget" placeholder="Optional"></div>
+        <div class="field span2"><label>Food preferences</label><input type="text" id="catFoodPref"></div>
+        <div class="field span2"><label>Dietary restrictions / allergies</label><input type="text" id="catDietary"></div>
+        <div class="field span2"><label>Desired menu</label><textarea id="catMenu"></textarea></div>
+        <div class="field span2"><label>Additional details</label><textarea id="catDetails"></textarea></div>
+        <div class="field span2"><button type="submit" class="btn btn-primary">Send catering request</button></div>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>Ennieskitchen</h3>
+          <p>...just delicious. Authentic Nigerian food and catering in Gardena and the greater Los Angeles area. Pickup only — no delivery.</p>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <ul>
+            <li><a href="tel:+13235786993">323-578-6993</a></li>
+            <li><a href="https://wa.me/13235786993">WhatsApp</a></li>
+            <li><a href="mailto:Ennieskitchen259@gmail.com">Ennieskitchen259@gmail.com</a></li>
+            <li>Gardena, California</li>
+          </ul>
+        </div>
+        <div>
+          <h5>Policies</h5>
+          <ul>
+            <li><a href="#">Privacy policy</a></li>
+            <li><a href="#">Terms & conditions</a></li>
+            <li><a href="#">Cancellation & refunds</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Ennieskitchen LLC. All rights reserved.</span>
+        <span>Pickup only — no delivery</span>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>Your cart</h3>
+    <button class="drawer-close" onclick="closeCart()">&times;</button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot" id="drawerFoot">
+    <div class="total-row"><span>Total</span><span id="drawerTotal">$0.00</span></div>
+    <button class="btn btn-primary" onclick="goCheckout()">Checkout</button>
+    <p class="drawer-note">Pickup only — pay by Zelle or PayPal after checkout.</p>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/catering.js"></script>
+</body>
+</html>
