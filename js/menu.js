@@ -43,7 +43,7 @@ function renderMenuList(){
             <span id="${id}_qty">${minQty}</span>
             <button onclick="changeQty('${id}', 1, ${minQty})">+</button>
           </div>
-          <button class="add-btn" onclick="addFromMenu('${id}', ${i}, ${minQty})">Add · <span id="${id}_price">${money(m.sizes[0][1]*minQty)}</span></button>
+          <button class="add-btn" onclick="addFromMenu('${id}', ${i}, ${minQty})">${PLUS_ICON}Add · <span id="${id}_price">${money(m.sizes[0][1]*minQty)}</span></button>
         </div>
       </div>
     `;

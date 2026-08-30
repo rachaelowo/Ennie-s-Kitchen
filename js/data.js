@@ -112,7 +112,7 @@ function servesFor(sizeLabel){
 }
 
 function dishColor(idx){
-  const colors = ['var(--amber)','var(--terracotta)','var(--green)','#D98A5F'];
+  const colors = ['#E8A33D','#C1440E','#3B5F45','#D98A5F'];
   return colors[idx % colors.length];
 }
 
@@ -123,6 +123,8 @@ function slugify(name){
     .replace(/[^a-z0-9]+/g,'-')
     .replace(/^-+|-+$/g,'');
 }
+
+const PLUS_ICON = `<svg class="icon icon-bump" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
 
 function dishImg(name, idx, className){
   const slug = slugify(name);

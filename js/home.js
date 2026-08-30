@@ -13,7 +13,7 @@ function renderSpreads(){
         </ul>
         <div class="spread-foot">
           <span class="spread-total">${money(total)}</span>
-          <button class="add-btn" onclick="addSpread(${idx})">Add this spread</button>
+          <button class="add-btn" onclick="addSpread(${idx})">${PLUS_ICON}Add this spread</button>
         </div>
       </div>
     `;
@@ -41,7 +41,7 @@ function renderFeatured(){
         <div class="dish-sizes">${m.sizes[0][0]} · ${servesFor(m.sizes[0][0])} · ${money(m.sizes[0][1])}</div>
         <div class="dish-footer">
           <span class="dish-price">${money(m.sizes[0][1])}</span>
-          <button class="add-btn" onclick="addToCart('${m.name.replace(/'/g,"\\'")}','${m.sizes[0][0]}',${m.sizes[0][1]},1)">Add to cart</button>
+          <button class="add-btn" onclick="addToCart('${m.name.replace(/'/g,"\\'")}','${m.sizes[0][0]}',${m.sizes[0][1]},1)">${PLUS_ICON}Add to cart</button>
         </div>
       </div>
     </div>
