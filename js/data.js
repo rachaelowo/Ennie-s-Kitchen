@@ -6,18 +6,14 @@ const MENU = [
   {name:"Native Rice", cat:"Rice", sizes:[["Quarter Tray",55],["Half Tray",125],["Large Tray",240]]},
   {name:"Seafood Fried Rice", cat:"Rice", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",240]]},
   {name:"Steamed White Rice", cat:"Rice", sizes:[["Quarter Tray",20],["Half Tray",40],["Large Tray",70]]},
-  {name:"Egusi", cat:"Nigerian Soups", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",280]], featured:true},
-  {name:"Efo Riro", cat:"Nigerian Soups", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",300]], featured:true},
-  {name:"Okra", cat:"Nigerian Soups", sizes:[["Quarter Tray",70],["Half Tray",130],["Large Tray",260]]},
+  {name:"Egusi", cat:"Nigerian Soups", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",280]], proteins:[["Beef",0],["Fish",0],["Chicken",0],["Goat Meat",10]], featured:true},
+  {name:"Efo Riro", cat:"Nigerian Soups", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",300]], proteins:[["Beef",0],["Fish",0],["Chicken",0],["Goat Meat",10]], featured:true},
+  {name:"Okra", cat:"Nigerian Soups", sizes:[["Quarter Tray",70],["Half Tray",130],["Large Tray",260]], proteins:[["Beef",0],["Fish",0],["Chicken",0],["Goat Meat",10]]},
   {name:"Ogbono", cat:"Nigerian Soups", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",300]]},
   {name:"Fisherman Soup", cat:"Nigerian Soups", sizes:[["Quarter Tray",100],["Half Tray",180],["Large Tray",350]]},
   {name:"Seafood Okro", cat:"Nigerian Soups", sizes:[["Quarter Tray",100],["Half Tray",180],["Large Tray",350]]},
   {name:"Ofada Sauce", cat:"Sauces", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",300]]},
   {name:"Poundo, Eba, Amala", cat:"Swallows & More", sizes:[["Per Serving",3]], minQty:12},
-  {name:"Beans Pottage", cat:"Swallows & More", sizes:[["Quarter Tray",50],["Half Tray",70],["Large Tray",140]]},
-  {name:"Boiled Yam and Egg", cat:"Swallows & More", sizes:[["Quarter Tray",80],["Half Tray",100],["Large Tray",200]]},
-  {name:"Combo — Half Rice + Half Beans + Half Ata Din Din", cat:"Swallows & More", sizes:[["Combo",220]], addons:"Plantain"},
-  {name:"Akara", cat:"Swallows & More", sizes:[["Half Tray",55],["Large Tray",110]]},
   {name:"Mackerel Stew", cat:"Stews", sizes:[["Quarter Tray",70],["Half Tray",110],["Large Tray",120]]},
   {name:"Hake Fish Stew", cat:"Stews", sizes:[["Quarter Tray",70],["Half Tray",110],["Large Tray",280]]},
   {name:"Beef Stew", cat:"Stews", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",280]]},
@@ -83,21 +79,32 @@ const SPREADS = [
 
 /* ---------------- FAQ DATA ---------------- */
 const FAQS = [
-  ["Do you offer delivery?", "No — pickup only in Gardena, California. You're welcome to arrange a third-party courier like Uber or Lyft."],
-  ["Where are you located?", "Gardena, California / greater Los Angeles area. The exact pickup address is shared once your order is confirmed."],
-  ["What type of food do you serve?", "Authentic Nigerian cuisine — rice dishes, soups, stews, pepper soups, swallows, small chops and more."],
-  ["Do you cater for events?", "Yes — weddings, birthdays, corporate events, baby showers, graduations and more. Request a quote on the Catering page."],
-  ["How far in advance should I place my order?", "Regular orders: minimum 24 hours notice. Catering orders: minimum 48–72 hours notice."],
-  ["Do you accommodate dietary restrictions?", "Let us know your dietary restrictions or allergies when ordering or requesting a catering quote, and we'll do our best to accommodate."],
-  ["What payment methods do you accept?", "Zelle and PayPal. Orders are prepared fresh once payment is received."],
-  ["What is your cancellation policy?", "See our Cancellation & Refunds policy, or contact us directly to discuss your order."],
-  ["Can I make changes to my order?", "Reach out by phone, WhatsApp or email as soon as possible — changes depend on how far along your order is."],
-  ["How do I place an order?", "Browse the menu, add items to your cart, then send your order over WhatsApp and pay by Zelle or PayPal."],
-  ["Do you offer custom catering menus?", "Yes — tell us your preferences in the catering quote form and we'll build a menu around your event."],
-  ["How can I contact Ennieskitchen?", "Call or WhatsApp +1 (323) 578-6993, or email Ennieskitchen259@gmail.com."]
+  ["How do I place an order?", "Browse the Menu page, add trays or items to your cart, then go to checkout. Add your name, phone number and preferred pickup time, choose a payment method, and send your order — we'll confirm it and start prepping once payment is received."],
+  ["Do you offer delivery?", "No — pickup only in Gardena, California. You're welcome to arrange your own third-party courier, like Uber or Lyft, to pick it up on your behalf."],
+  ["Where are you located, and what areas do you serve?", "We're based in Gardena, California, and serve customers throughout the greater Los Angeles area, including the South Bay. The exact pickup address is shared once your order is confirmed."],
+  ["What type of food do you serve?", "Authentic Nigerian cuisine — rice dishes like jollof and fried rice, soups like egusi and efo riro, stews, pepper soups, swallows, small chops, pasta and drinks. See the full Menu page for sizes and prices."],
+  ["How far in advance should I place my order?", "Regular menu orders need a minimum of 24 hours notice. Catering orders need a minimum of 48–72 hours notice, and larger events may need more lead time — the earlier you reach out, the more flexibility we have."],
+  ["What payment methods do you accept?", "Zelle, PayPal, PayPal QR code, and debit/credit card at checkout. Orders are prepared fresh once payment is confirmed, so please complete payment before your pickup time."],
+  ["Is sales tax included in the price?", "Menu prices are shown before tax. California/Gardena sales tax is calculated automatically at checkout and shown as a separate line, along with your subtotal and final total, before you pay."],
+  ["What is your cancellation and refund policy?", "Because everything is cooked fresh to order, cancellations are easiest before we've started preparing your food. Reach out by phone or WhatsApp as soon as possible if plans change — see our Cancellation & Refunds policy for full details, or contact us directly to discuss your specific order."],
+  ["Can I make changes to my order after I've placed it?", "Reach out by phone, WhatsApp or email as soon as possible. Whether we can adjust items, sizes or the pickup time depends on how far along your order already is."],
+  ["Do you cater for events?", "Yes — weddings, birthdays, corporate events, baby showers, graduations, family gatherings and more. Request a quote on the Catering page and tell us about your event."],
+  ["How much notice do you need for catering?", "A minimum of 48–72 hours for most catering orders. For larger events (weddings, corporate functions, big parties), we recommend reaching out at least 1–2 weeks ahead so we can plan quantities, timing and any custom requests."],
+  ["Do you offer custom catering menus?", "Yes — tell us your preferences, guest count and budget in the catering quote form and we'll build a menu around your event. We're also happy to work from a theme or a must-have dish."],
+  ["Is there a minimum order size for catering?", "Catering minimums depend on the event and menu you choose — mention your expected guest count in the quote request and we'll let you know what works best, including whether a smaller party-tray order might suit you better than full catering."],
+  ["Do you accommodate dietary restrictions or allergies?", "Let us know your dietary restrictions or allergies when ordering or requesting a catering quote, and we'll do our best to accommodate — just note that our kitchen handles common allergens, so we can't guarantee a fully allergen-free environment."],
+  ["Can I adjust the spice level of my dish?", "Yes — Nigerian food can run spicy. Let us know in your order notes or when you message us on WhatsApp if you'd like a dish made milder or extra spicy."],
+  ["How should I store and reheat my food?", "Refrigerate leftovers within two hours of pickup and eat within 3–4 days, or freeze for longer storage. Reheat rice and stews on the stove or in the microwave until steaming hot throughout."],
+  ["What sizes do your trays come in?", "Most dishes come in Quarter, Half and Large trays. Quarter feeds about 3–4 people, Half feeds 6–8, and Large feeds 12–16 — exact serving sizes are shown next to each dish on the Menu page."],
+  ["Can I order for a small get-together, not just big events?", "Absolutely — our Quarter and Half trays are sized for family dinners and small gatherings, not just parties. Check out the ready-made spreads on the homepage for quick ideas."],
+  ["How can I contact Ennieskitchen?", "Call or WhatsApp +1 (323) 578-6993, or email Ennieskitchen259@gmail.com. WhatsApp is usually the fastest way to reach us."]
 ];
 
 /* ---------------- SHARED HELPERS ---------------- */
+/* Gardena, CA combined sales tax rate (CDTFA, 2026). Confirm with your
+   accountant/CDTFA if this ever needs to change. */
+const TAX_RATE = 0.105;
+
 function money(n){ return "$" + n.toFixed(2); }
 
 function servesFor(sizeLabel){

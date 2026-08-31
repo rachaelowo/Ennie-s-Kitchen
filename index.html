@@ -5,7 +5,47 @@
 <script>(function(){try{var t=localStorage.getItem('ennieskitchen_theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ennieskitchen — Nigerian Food & Catering in Gardena, LA</title>
-<meta name="description" content="Authentic Nigerian food and catering in Gardena and Los Angeles. Order jollof rice, egusi, party trays and small chops. Pickup only.">
+<meta name="description" content="Ennieskitchen serves authentic Nigerian food and catering in Gardena and Los Angeles, CA — jollof rice, egusi, party trays, small chops and full event catering. Pickup only, no delivery.">
+<link rel="canonical" href="https://rachaelowo.github.io/Restaurant/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ennieskitchen">
+<meta property="og:title" content="Ennieskitchen — Nigerian Food & Catering in Gardena, LA">
+<meta property="og:description" content="Authentic Nigerian food and catering in Gardena and Los Angeles, CA — jollof rice, egusi, party trays, small chops and full event catering.">
+<meta property="og:url" content="https://rachaelowo.github.io/Restaurant/">
+<meta property="og:image" content="https://rachaelowo.github.io/Restaurant/images/logo.jpg">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ennieskitchen — Nigerian Food & Catering in Gardena, LA">
+<meta name="twitter:description" content="Authentic Nigerian food and catering in Gardena and Los Angeles, CA — jollof rice, egusi, party trays, small chops and full event catering.">
+<meta name="twitter:image" content="https://rachaelowo.github.io/Restaurant/images/logo.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Ennieskitchen",
+  "alternateName": "Ennie's Kitchen",
+  "image": "https://rachaelowo.github.io/Restaurant/images/logo.jpg",
+  "url": "https://rachaelowo.github.io/Restaurant/",
+  "telephone": "+1-323-578-6993",
+  "email": "Ennieskitchen259@gmail.com",
+  "servesCuisine": ["Nigerian", "African"],
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Gardena",
+    "addressRegion": "CA",
+    "addressCountry": "US"
+  },
+  "areaServed": [
+    { "@type": "City", "name": "Gardena" },
+    { "@type": "City", "name": "Los Angeles" },
+    { "@type": "AdministrativeArea", "name": "South Bay, Los Angeles" }
+  ],
+  "hasMenu": "https://rachaelowo.github.io/Restaurant/menu.html",
+  "acceptsReservations": "False",
+  "menu": "https://rachaelowo.github.io/Restaurant/menu.html"
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -85,7 +125,7 @@
           <img src="images/hero.jpg" alt="Jollof rice, plantain and pepper stew">
           <div class="hero-photo-tag">Jollof rice, plantain & pepper stew</div>
         </div>
-        <div class="hero-photo-small"><img src="images/jollof-rice.jpg" alt="Jollof rice"></div>
+        <div class="hero-photo-small"><img src="images/jollof-chicken-hero-small.jpg" alt="Jollof rice with roasted chicken"></div>
       </div>
     </div>
   </section>
@@ -189,12 +229,46 @@
         <h2>What our customers say</h2>
         <p>Real messages from families and hosts who have shared an Ennieskitchen meal.</p>
       </div>
-      <div class="review-scroll">
+      <div class="review-scroll" id="liveReviews">
         <div class="review-card"><p>"Thank you! Your food is amazing!"</p><span>— Ennieskitchen customer</span></div>
         <div class="review-card"><p>"This one is crazy — tastes really good."</p><span>— Ennieskitchen customer</span></div>
         <div class="review-card"><p>"The pepper soup spice was exactly how we like it. Money well spent!"</p><span>— Ennieskitchen customer</span></div>
         <div class="review-card"><p>"My husband specifically wanted me to say: please don't lower your standard!"</p><span>— Ennieskitchen customer</span></div>
         <div class="review-card"><p>"Thank you. The food is delicious."</p><span>— Ennieskitchen customer</span></div>
+      </div>
+
+      <div class="review-form-wrap">
+        <h3>Leave a review</h3>
+        <p>Ordered from us? Tell us how it went.</p>
+        <form class="form-grid full" id="reviewForm" onsubmit="submitReview(event)">
+          <div class="field">
+            <label>Your name <span class="req">*</span></label>
+            <input type="text" id="revName" maxlength="80" required>
+          </div>
+          <div class="field">
+            <label>Rating <span class="req">*</span></label>
+            <div class="star-picker" id="starPicker">
+              <button type="button" class="star-pick" onclick="setRating(1)" aria-label="1 star">★</button>
+              <button type="button" class="star-pick" onclick="setRating(2)" aria-label="2 stars">★</button>
+              <button type="button" class="star-pick" onclick="setRating(3)" aria-label="3 stars">★</button>
+              <button type="button" class="star-pick" onclick="setRating(4)" aria-label="4 stars">★</button>
+              <button type="button" class="star-pick" onclick="setRating(5)" aria-label="5 stars">★</button>
+            </div>
+            <input type="hidden" id="reviewRating" value="0">
+          </div>
+          <div class="field">
+            <label>Your review <span class="req">*</span></label>
+            <textarea id="revComment" maxlength="600" required></textarea>
+          </div>
+          <div class="field hp" aria-hidden="true">
+            <label>Website</label>
+            <input type="text" id="revWebsite" tabindex="-1" autocomplete="off">
+          </div>
+          <div class="field">
+            <button type="submit" class="btn btn-primary" id="reviewSubmitBtn">Submit review</button>
+            <p class="form-status" id="reviewStatus"></p>
+          </div>
+        </form>
       </div>
     </div>
   </section>
@@ -263,9 +337,9 @@
   </div>
   <div class="drawer-items" id="drawerItems"></div>
   <div class="drawer-foot" id="drawerFoot">
-    <div class="total-row"><span>Total</span><span id="drawerTotal">$0.00</span></div>
+    <div class="total-row"><span>Subtotal</span><span id="drawerTotal">$0.00</span></div>
     <button class="btn btn-primary" onclick="goCheckout()">Checkout <svg class="icon icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
-    <p class="drawer-note">Pickup only — pay by Zelle or PayPal after checkout.</p>
+    <p class="drawer-note">Tax calculated at checkout. Pay by Zelle, PayPal QR or card.</p>
   </div>
 </div>
 
@@ -274,5 +348,8 @@
 <script src="js/nav.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/home.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/reviews-config.js"></script>
+<script src="js/reviews.js"></script>
 </body>
 </html>

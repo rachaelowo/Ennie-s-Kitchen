@@ -5,7 +5,9 @@
 <script>(function(){try{var t=localStorage.getItem('ennieskitchen_theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Checkout — Ennieskitchen</title>
-<meta name="description" content="Review your Ennieskitchen order and send it over WhatsApp. Pickup only in Gardena, CA — pay by Zelle or PayPal.">
+<meta name="description" content="Review your Ennieskitchen order, see tax and total, and send it over WhatsApp. Pickup only in Gardena, CA — pay by Zelle, PayPal or card.">
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://rachaelowo.github.io/Restaurant/checkout.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -80,6 +82,8 @@
           <div class="co-section">
             <h5>Your order</h5>
             <div id="checkoutLines"></div>
+            <div class="co-line"><span>Subtotal</span><span id="checkoutSubtotal">$0.00</span></div>
+            <div class="co-line"><span>Sales tax (10.5%)</span><span id="checkoutTax">$0.00</span></div>
             <div class="co-total"><span>Total</span><span id="checkoutTotal">$0.00</span></div>
           </div>
           <div class="co-section">
@@ -89,8 +93,32 @@
             <div class="field"><input type="text" id="coTime" placeholder="Preferred pickup time"></div>
           </div>
           <div class="pickup-note" id="checkoutPickupNote" style="margin-bottom:14px;"></div>
-          <p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:14px;">Pay by Zelle (323-578-6993, Ennieskitchenllc) or PayPal, then send your order below. Orders are prepared fresh once payment is received.</p>
-          <button class="btn btn-green" style="width:100%;justify-content:center;" onclick="sendWhatsApp()"><svg class="icon icon-bump" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg> Send order on WhatsApp</button>
+
+          <div class="co-section">
+            <h5>Payment method</h5>
+            <div class="pay-tabs" id="payTabs">
+              <button type="button" class="pay-tab active" data-method="zelle" onclick="selectPayment('zelle')">Zelle</button>
+              <button type="button" class="pay-tab" data-method="qr" onclick="selectPayment('qr')">PayPal QR</button>
+              <button type="button" class="pay-tab" data-method="card" onclick="selectPayment('card')">Card</button>
+            </div>
+
+            <div class="pay-panel" id="payPanel-zelle">
+              <p>Send the total above via Zelle to <strong>323-578-6993</strong> (Ennieskitchenllc), then tap "Send order on WhatsApp" below.</p>
+            </div>
+            <div class="pay-panel hidden" id="payPanel-qr">
+              <p>Scan with your phone's camera to open PayPal, enter <strong id="qrAmount">$0.00</strong> as the amount and send it to Ennieskitchen, then tap "Send order on WhatsApp" below.</p>
+              <div id="paypalQR"><img src="images/paypal-qr.jpg" alt="Ennieskitchen PayPal QR code" onerror="this.parentElement.innerHTML='<p style=&quot;font-size:13px;&quot;>QR code coming soon — use Zelle or Card instead.</p>'"></div>
+            </div>
+            <div class="pay-panel hidden" id="payPanel-card">
+              <p id="cardPayText">Pay securely by debit or credit card.</p>
+              <div id="square-card-container"></div>
+              <button type="button" id="squarePayBtn" class="btn btn-primary hidden" style="width:100%;justify-content:center;margin-top:10px;" onclick="submitSquarePayment()">Pay <span id="squarePayAmount"></span></button>
+              <p class="form-status" id="squarePayStatus"></p>
+            </div>
+          </div>
+
+          <p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:14px;">Orders are prepared fresh once payment is received.</p>
+          <button class="btn btn-green" id="sendWhatsAppBtn" style="width:100%;justify-content:center;" onclick="sendWhatsApp()"><svg class="icon icon-bump" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg> Send order on WhatsApp</button>
         </div>
       </div>
     </div>
@@ -137,9 +165,9 @@
   </div>
   <div class="drawer-items" id="drawerItems"></div>
   <div class="drawer-foot" id="drawerFoot">
-    <div class="total-row"><span>Total</span><span id="drawerTotal">$0.00</span></div>
+    <div class="total-row"><span>Subtotal</span><span id="drawerTotal">$0.00</span></div>
     <button class="btn btn-primary" onclick="goCheckout()">Checkout <svg class="icon icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
-    <p class="drawer-note">Pickup only — pay by Zelle or PayPal after checkout.</p>
+    <p class="drawer-note">Tax calculated at checkout. Pay by Zelle, PayPal QR or card.</p>
   </div>
 </div>
 
@@ -147,6 +175,7 @@
 <script src="js/cart.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/theme.js"></script>
+<script src="js/square-config.js"></script>
 <script src="js/checkout.js"></script>
 </body>
 </html>

@@ -4,8 +4,20 @@
 <meta charset="UTF-8">
 <script>(function(){try{var t=localStorage.getItem('ennieskitchen_theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Menu — Ennieskitchen</title>
-<meta name="description" content="Browse the full Ennieskitchen menu — Nigerian rice dishes, soups, stews, pepper soups, swallows, small chops and more. Pickup only in Gardena, CA.">
+<title>Menu — Ennieskitchen | Nigerian Food in Gardena & Los Angeles</title>
+<meta name="description" content="Full Ennieskitchen menu of authentic Nigerian food in Los Angeles — rice dishes, soups, stews, pepper soups, swallows and small chops, with sizes and prices. Pickup only in Gardena, CA.">
+<link rel="canonical" href="https://rachaelowo.github.io/Restaurant/menu.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ennieskitchen">
+<meta property="og:title" content="Menu — Ennieskitchen | Nigerian Food in Gardena & Los Angeles">
+<meta property="og:description" content="Full Ennieskitchen menu of authentic Nigerian food — rice dishes, soups, stews, pepper soups, swallows and small chops, with sizes and prices.">
+<meta property="og:url" content="https://rachaelowo.github.io/Restaurant/menu.html">
+<meta property="og:image" content="https://rachaelowo.github.io/Restaurant/images/logo.jpg">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Menu — Ennieskitchen | Nigerian Food in Gardena & Los Angeles">
+<meta name="twitter:description" content="Full Ennieskitchen menu of authentic Nigerian food — rice dishes, soups, stews, pepper soups, swallows and small chops, with sizes and prices.">
+<meta name="twitter:image" content="https://rachaelowo.github.io/Restaurant/images/logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -72,10 +84,15 @@
     <h1>Our menu</h1>
     <p>Freshly prepared Nigerian dishes by the tray. Choose your size, set the quantity and add to cart. Pickup only — no delivery.</p>
     <div class="pickup-note" id="menuPickupNote"></div>
+    <div class="menu-search">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="search" id="menuSearch" placeholder="Search menu items…" oninput="setSearch(this.value)" aria-label="Search menu items">
+    </div>
     <div class="cat-pills" id="catPills"></div>
   </div>
   <div class="wrap">
     <div class="menu-list" id="menuList"></div>
+    <p id="menuEmpty" class="hidden" style="color:var(--ink-soft);padding:20px 0;">No dishes match your search — try a different name.</p>
     <p style="color:var(--ink-soft);font-size:13.5px;padding-bottom:40px;">Regular orders require a minimum of 24 hours for preparation. Catering orders require 48–72 hours notice. Orders are prepared fresh after payment has been received.</p>
   </div>
 
@@ -120,9 +137,9 @@
   </div>
   <div class="drawer-items" id="drawerItems"></div>
   <div class="drawer-foot" id="drawerFoot">
-    <div class="total-row"><span>Total</span><span id="drawerTotal">$0.00</span></div>
+    <div class="total-row"><span>Subtotal</span><span id="drawerTotal">$0.00</span></div>
     <button class="btn btn-primary" onclick="goCheckout()">Checkout <svg class="icon icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
-    <p class="drawer-note">Pickup only — pay by Zelle or PayPal after checkout.</p>
+    <p class="drawer-note">Tax calculated at checkout. Pay by Zelle, PayPal QR or card.</p>
   </div>
 </div>
 
