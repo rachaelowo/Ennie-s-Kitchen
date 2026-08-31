@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /checkout.html
 
-Sitemap: https://rachaelowo.github.io/Restaurant/sitemap.xml
+Sitemap: https://rachaelowo.github.io/Ennie-s-Kitchen/sitemap.xml
