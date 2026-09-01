@@ -21,9 +21,10 @@ async function saveOrderRecord(paidByCard, name, phone, email, time){
       tax: checkoutTax(),
       total: checkoutGrandTotal(),
       payment_method: paidByCard ? 'card' : selectedPaymentMethod,
+      confirmed: paidByCard,
     }]);
   }catch(e){
-    // Non-blocking — the email is the primary order channel.
+    // Non-blocking — the order email/WhatsApp message is the primary channel.
   }
 }
 
@@ -215,10 +216,35 @@ function sendOrderEmail(paidByCard){
   });
   body += `\nSubtotal: ${money(checkoutSubtotal())}\nSales tax: ${money(checkoutTax())}\nTotal: ${money(checkoutGrandTotal())}`;
   body += `\n\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nPickup time: ${time || 'flexible'}`;
-  body += paidByCard ? `\nPayment: Paid by card via Square` : `\nPayment method: ${selectedPaymentMethod}`;
+  body += `\nPayment: Paid by card via Square`;
 
   const mailto = `mailto:Ennieskitchen259@gmail.com?subject=${encodeURIComponent('Order from ' + name)}&body=${encodeURIComponent(body)}`;
   window.location.href = mailto;
+  clearCart();
+}
+
+function sendOrderWhatsApp(){
+  const name = document.getElementById('coName').value.trim();
+  const phone = document.getElementById('coPhone').value.trim();
+  const email = document.getElementById('coEmail').value.trim();
+  const time = document.getElementById('coTime').value.trim();
+  if(!name || !phone || !email){
+    alert('Please enter your name, phone number and email address.');
+    return;
+  }
+  saveOrderRecord(false, name, phone, email, time);
+
+  let msg = `Hi Ennieskitchen! I'd like to place an order:%0A%0A`;
+  cart.forEach(l=>{
+    msg += `${l.name} (${l.size}) x${l.qty} - ${money(l.price*l.qty)}%0A`;
+  });
+  msg += `%0ASubtotal: ${money(checkoutSubtotal())}%0ASales tax: ${money(checkoutTax())}%0ATotal: ${money(checkoutGrandTotal())}`;
+  msg += `%0A%0AName: ${name}%0APhone: ${phone}%0AEmail: ${email}%0APickup time: ${time || 'flexible'}`;
+  msg += `%0APayment method: ${selectedPaymentMethod}`;
+  msg += `%0A%0AI'll send a screenshot of my payment confirmation next.`;
+
+  window.open(`https://wa.me/13235786993?text=${msg}`, '_blank');
+  clearCart();
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{

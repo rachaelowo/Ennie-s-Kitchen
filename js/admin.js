@@ -112,17 +112,66 @@ async function loadOrders(){
 
   listEl.innerHTML = data.length ? data.map(o=>{
     const items = Array.isArray(o.items) ? o.items.map(i=>`${escapeHTML(i.name)} (${escapeHTML(i.size)}) x${i.qty}`).join(', ') : '';
+    const badge = o.confirmed
+      ? `<span class="status-badge status-confirmed">Confirmed</span>`
+      : `<span class="status-badge status-pending">Pending proof</span>`;
+    const confirmBtn = o.confirmed ? '' : (
+      o.email
+        ? `<button class="btn-confirm" onclick="confirmOrderAndSendReceipt('${o.id}')">Confirm &amp; send receipt</button>`
+        : `<span class="admin-meta">No email on file — can't send receipt</span>`
+    );
     return `
       <div class="admin-row">
         <div class="admin-row-main">
-          <strong>${escapeHTML(o.customer_name)}</strong> — ${money(Number(o.total))}
-          <span class="admin-meta">${new Date(o.created_at).toLocaleString()} · ${escapeHTML(o.payment_method)} · pickup: ${escapeHTML(o.pickup_time || 'flexible')} · ${escapeHTML(o.phone)}</span>
+          <strong>${escapeHTML(o.customer_name)}</strong> — ${money(Number(o.total))} ${badge}
+          <span class="admin-meta">${new Date(o.created_at).toLocaleString()} · ${escapeHTML(o.payment_method)} · pickup: ${escapeHTML(o.pickup_time || 'flexible')} · ${escapeHTML(o.phone)}${o.email ? ' · ' + escapeHTML(o.email) : ''}</span>
           <div class="admin-items">${items}</div>
+          <div style="margin-top:8px;">${confirmBtn}</div>
         </div>
         <button class="btn-delete" onclick="deleteOrder('${o.id}')">Delete</button>
       </div>
     `;
   }).join('') : '<p style="color:var(--ink-soft);font-size:14px;">No orders yet.</p>';
+}
+
+async function confirmOrderAndSendReceipt(id){
+  const { data: order, error: fetchError } = await adminSupabase.from('orders').select('*').eq('id', id).single();
+  if(fetchError || !order){
+    alert('Could not load that order.');
+    return;
+  }
+
+  try{
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/send-order-receipt`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify({
+        customerEmail: order.email,
+        customerName: order.customer_name,
+        phone: order.phone,
+        pickupTime: order.pickup_time,
+        items: order.items,
+        subtotal: order.subtotal,
+        tax: order.tax,
+        total: order.total,
+        paymentMethod: order.payment_method,
+      }),
+    });
+    const data = await res.json();
+    if(!data.success){
+      alert('Receipt email failed to send: ' + (data.error || 'unknown error'));
+      return;
+    }
+  }catch(e){
+    alert('Receipt email failed to send.');
+    return;
+  }
+
+  await adminSupabase.from('orders').update({ confirmed: true }).eq('id', id);
+  loadOrders();
 }
 
 async function deleteOrder(id){

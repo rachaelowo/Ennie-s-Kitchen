@@ -38,6 +38,12 @@ function removeLine(idx){
   renderCart();
 }
 
+function clearCart(){
+  cart = [];
+  saveCart();
+  renderCart();
+}
+
 function cartTotal(){
   return cart.reduce((s,l)=> s + l.price*l.qty, 0);
 }
