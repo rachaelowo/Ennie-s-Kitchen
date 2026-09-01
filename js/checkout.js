@@ -3,6 +3,57 @@ let selectedPaymentMethod = 'zelle';
 let squareCard = null;
 let squareInitStarted = false;
 
+let ordersSupabaseClient = null;
+if (typeof supabase !== "undefined" && typeof SUPABASE_URL !== "undefined" && SUPABASE_URL && typeof SUPABASE_ANON_KEY !== "undefined" && SUPABASE_ANON_KEY) {
+  ordersSupabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+async function saveOrderRecord(paidByCard, name, phone, email, time){
+  if(!ordersSupabaseClient) return;
+  try{
+    await ordersSupabaseClient.from('orders').insert([{
+      customer_name: name,
+      phone: phone,
+      email: email || null,
+      pickup_time: time || 'flexible',
+      items: cart,
+      subtotal: checkoutSubtotal(),
+      tax: checkoutTax(),
+      total: checkoutGrandTotal(),
+      payment_method: paidByCard ? 'card' : selectedPaymentMethod,
+    }]);
+  }catch(e){
+    // Non-blocking — the email is the primary order channel.
+  }
+}
+
+async function sendReceiptEmail(paidByCard, name, email, phone, time){
+  if(!email) return;
+  if(typeof SUPABASE_URL === 'undefined' || !SUPABASE_URL) return;
+  try{
+    await fetch(`${SUPABASE_URL}/functions/v1/send-order-receipt`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify({
+        customerEmail: email,
+        customerName: name,
+        phone: phone,
+        pickupTime: time || 'flexible',
+        items: cart,
+        subtotal: checkoutSubtotal(),
+        tax: checkoutTax(),
+        total: checkoutGrandTotal(),
+        paymentMethod: paidByCard ? 'card' : selectedPaymentMethod,
+      }),
+    });
+  }catch(e){
+    // Non-blocking — the order email to the business is the primary channel.
+  }
+}
+
 function checkoutSubtotal(){ return cartTotal(); }
 function checkoutTax(){ return checkoutSubtotal() * TAX_RATE; }
 function checkoutGrandTotal(){ return checkoutSubtotal() + checkoutTax(); }
@@ -38,7 +89,7 @@ function selectPayment(method){
     const panel = document.getElementById('payPanel-'+m);
     if(panel) panel.classList.toggle('hidden', m!==method);
   });
-  const sendBtn = document.getElementById('sendWhatsAppBtn');
+  const sendBtn = document.getElementById('sendOrderBtn');
   if(sendBtn) sendBtn.classList.toggle('hidden', method==='card');
 
   if(method==='card') renderSquareCardForm();
@@ -101,8 +152,9 @@ async function submitSquarePayment(){
 
   const name = document.getElementById('coName').value.trim();
   const phone = document.getElementById('coPhone').value.trim();
-  if(!name || !phone){
-    alert('Please enter your name and phone number.');
+  const email = document.getElementById('coEmail').value.trim();
+  if(!name || !phone || !email){
+    alert('Please enter your name, phone number and email address.');
     return;
   }
 
@@ -136,8 +188,8 @@ async function submitSquarePayment(){
     }
 
     status.className = 'form-status success';
-    status.textContent = 'Payment received — sending your order on WhatsApp...';
-    sendWhatsApp(true);
+    status.textContent = 'Payment received — emailing your order...';
+    sendOrderEmail(true);
   }catch(e){
     status.className = 'form-status error';
     status.textContent = e.message || 'Something went wrong with the card payment — please try again or use Zelle or the PayPal QR code instead.';
@@ -146,22 +198,27 @@ async function submitSquarePayment(){
   }
 }
 
-function sendWhatsApp(paidByCard){
+function sendOrderEmail(paidByCard){
   const name = document.getElementById('coName').value.trim();
   const phone = document.getElementById('coPhone').value.trim();
+  const email = document.getElementById('coEmail').value.trim();
   const time = document.getElementById('coTime').value.trim();
-  if(!name || !phone){
-    alert('Please enter your name and phone number.');
+  if(!name || !phone || !email){
+    alert('Please enter your name, phone number and email address.');
     return;
   }
-  let msg = `Hi Ennieskitchen! I'd like to place an order:%0A%0A`;
+  saveOrderRecord(paidByCard, name, phone, email, time);
+  sendReceiptEmail(paidByCard, name, email, phone, time);
+  let body = `Hi Ennieskitchen! I'd like to place an order:\n\n`;
   cart.forEach(l=>{
-    msg += `${l.name} (${l.size}) x${l.qty} - ${money(l.price*l.qty)}%0A`;
+    body += `${l.name} (${l.size}) x${l.qty} - ${money(l.price*l.qty)}\n`;
   });
-  msg += `%0ASubtotal: ${money(checkoutSubtotal())}%0ASales tax: ${money(checkoutTax())}%0ATotal: ${money(checkoutGrandTotal())}`;
-  msg += `%0A%0AName: ${name}%0APhone: ${phone}%0APickup time: ${time || 'flexible'}`;
-  msg += paidByCard ? `%0APayment: Paid by card via Square` : `%0APayment method: ${selectedPaymentMethod}`;
-  window.open(`https://wa.me/13235786993?text=${msg}`, '_blank');
+  body += `\nSubtotal: ${money(checkoutSubtotal())}\nSales tax: ${money(checkoutTax())}\nTotal: ${money(checkoutGrandTotal())}`;
+  body += `\n\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nPickup time: ${time || 'flexible'}`;
+  body += paidByCard ? `\nPayment: Paid by card via Square` : `\nPayment method: ${selectedPaymentMethod}`;
+
+  const mailto = `mailto:Ennieskitchen259@gmail.com?subject=${encodeURIComponent('Order from ' + name)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailto;
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{

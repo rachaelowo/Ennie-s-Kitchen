@@ -28,6 +28,33 @@ function renderCateringGallery(){
 document.addEventListener('DOMContentLoaded', renderCateringGallery);
 
 /* ---------------- CATERING FORM ---------------- */
+let cateringSupabaseClient = null;
+if (typeof supabase !== "undefined" && typeof SUPABASE_URL !== "undefined" && SUPABASE_URL && typeof SUPABASE_ANON_KEY !== "undefined" && SUPABASE_ANON_KEY) {
+  cateringSupabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+async function saveCateringRequest(fields){
+  if(!cateringSupabaseClient) return;
+  try{
+    await cateringSupabaseClient.from('catering_requests').insert([{
+      full_name: fields.name,
+      phone: fields.phone,
+      email: fields.email || null,
+      event_type: fields.eventType || null,
+      event_date: fields.eventDate || null,
+      guest_count: fields.guestCount || null,
+      location: fields.location || null,
+      budget: fields.budget || null,
+      food_preferences: fields.foodPref || null,
+      dietary_restrictions: fields.dietary || null,
+      desired_menu: fields.menu || null,
+      additional_details: fields.details || null,
+    }]);
+  }catch(e){
+    // Non-blocking — the email is the primary channel.
+  }
+}
+
 function submitCatering(e){
   e.preventDefault();
   const name = document.getElementById('catName').value.trim();
@@ -35,19 +62,31 @@ function submitCatering(e){
   const date = document.getElementById('catDate').value;
   if(!name || !phone || !date){ return; }
 
+  const email = document.getElementById('catEmail').value.trim();
+  const eventType = document.getElementById('catType').value.trim();
+  const guestCount = document.getElementById('catGuests').value.trim();
+  const location = document.getElementById('catLocation').value.trim();
+  const budget = document.getElementById('catBudget').value.trim();
+  const foodPref = document.getElementById('catFoodPref').value.trim();
+  const dietary = document.getElementById('catDietary').value.trim();
+  const menu = document.getElementById('catMenu').value.trim();
+  const details = document.getElementById('catDetails').value.trim();
+
+  saveCateringRequest({ name, phone, email, eventType, eventDate: date, guestCount, location, budget, foodPref, dietary, menu, details });
+
   const body = [
     `Full name: ${name}`,
     `Phone: ${phone}`,
-    `Email: ${document.getElementById('catEmail').value}`,
-    `Event type: ${document.getElementById('catType').value}`,
+    `Email: ${email}`,
+    `Event type: ${eventType}`,
     `Event date: ${date}`,
-    `Guest count: ${document.getElementById('catGuests').value}`,
-    `Location: ${document.getElementById('catLocation').value}`,
-    `Budget: ${document.getElementById('catBudget').value}`,
-    `Food preferences: ${document.getElementById('catFoodPref').value}`,
-    `Dietary restrictions: ${document.getElementById('catDietary').value}`,
-    `Desired menu: ${document.getElementById('catMenu').value}`,
-    `Additional details: ${document.getElementById('catDetails').value}`,
+    `Guest count: ${guestCount}`,
+    `Location: ${location}`,
+    `Budget: ${budget}`,
+    `Food preferences: ${foodPref}`,
+    `Dietary restrictions: ${dietary}`,
+    `Desired menu: ${menu}`,
+    `Additional details: ${details}`,
   ].join('\n');
 
   const mailto = `mailto:Ennieskitchen259@gmail.com?subject=${encodeURIComponent('Catering request from '+name)}&body=${encodeURIComponent(body)}`;
