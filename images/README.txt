@@ -19,10 +19,10 @@ Requirements for each photo:
 RICE
 ----
 jollof-rice.jpg
-fried-rice.jpg
+basmati-fried-rice.jpg
 asun-rice.jpg
 native-rice.jpg
-seafood-fried-rice.jpg
+basmati-seafood-fried-rice.jpg
 steamed-white-rice.jpg
 
 NIGERIAN SOUPS

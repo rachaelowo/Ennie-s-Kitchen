@@ -1,10 +1,10 @@
 /* ---------------- MENU DATA ---------------- */
 const MENU = [
   {name:"Jollof Rice", cat:"Rice", sizes:[["Quarter Tray",40],["Half Tray",55],["Large Tray",100]], featured:true},
-  {name:"Fried Rice", cat:"Rice", sizes:[["Quarter Tray",45],["Half Tray",60],["Large Tray",110]]},
+  {name:"Basmati Fried Rice", cat:"Rice", sizes:[["Quarter Tray",45],["Half Tray",60],["Large Tray",110]]},
   {name:"Asun Rice", cat:"Rice", sizes:[["Quarter Tray",55],["Half Tray",110],["Large Tray",240]]},
   {name:"Native Rice", cat:"Rice", sizes:[["Quarter Tray",55],["Half Tray",125],["Large Tray",240]]},
-  {name:"Seafood Fried Rice", cat:"Rice", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",240]]},
+  {name:"Basmati Seafood Fried Rice", cat:"Rice", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",240]]},
   {name:"Steamed White Rice", cat:"Rice", sizes:[["Quarter Tray",20],["Half Tray",40],["Large Tray",70]]},
   {name:"Egusi", cat:"Nigerian Soups", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",280]], proteins:[["Beef",0],["Fish",0],["Chicken",0],["Goat Meat",10]], featured:true},
   {name:"Efo Riro", cat:"Nigerian Soups", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",300]], proteins:[["Beef",0],["Fish",0],["Chicken",0],["Goat Meat",10]], featured:true},

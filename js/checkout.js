@@ -55,6 +55,32 @@ async function sendReceiptEmail(paidByCard, name, email, phone, time){
   }
 }
 
+async function notifyBusinessOfOrder(paidByCard, name, phone, email, time){
+  if(typeof SUPABASE_URL === 'undefined' || !SUPABASE_URL) return;
+  try{
+    await fetch(`${SUPABASE_URL}/functions/v1/notify-new-order`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify({
+        customerName: name,
+        phone: phone,
+        customerEmail: email,
+        pickupTime: time || 'flexible',
+        items: cart,
+        subtotal: checkoutSubtotal(),
+        tax: checkoutTax(),
+        total: checkoutGrandTotal(),
+        paymentMethod: paidByCard ? 'card' : selectedPaymentMethod,
+      }),
+    });
+  }catch(e){
+    // Non-blocking — this is a best-effort alert, not the source of truth (that's the admin dashboard).
+  }
+}
+
 function checkoutSubtotal(){ return cartTotal(); }
 function checkoutTax(){ return checkoutSubtotal() * TAX_RATE; }
 function checkoutGrandTotal(){ return checkoutSubtotal() + checkoutTax(); }
@@ -209,6 +235,7 @@ function sendOrderEmail(paidByCard){
     return;
   }
   saveOrderRecord(paidByCard, name, phone, email, time);
+  notifyBusinessOfOrder(paidByCard, name, phone, email, time);
   sendReceiptEmail(paidByCard, name, email, phone, time);
   let body = `Hi Ennieskitchen! I'd like to place an order:\n\n`;
   cart.forEach(l=>{
@@ -233,6 +260,7 @@ function sendOrderWhatsApp(){
     return;
   }
   saveOrderRecord(false, name, phone, email, time);
+  notifyBusinessOfOrder(false, name, phone, email, time);
 
   let msg = `Hi Ennieskitchen! I'd like to place an order:%0A%0A`;
   cart.forEach(l=>{
