@@ -65,6 +65,7 @@
     <a href="about.html"><span class="nav-dot"></span>About</a>
     <a href="contact.html"><span class="nav-dot"></span>Contact</a>
     <a href="faq.html"><span class="nav-dot"></span>FAQ</a>
+    <a href="reviews.html"><span class="nav-dot"></span>Reviews</a>
   </nav>
   <div class="sidebar-actions">
     <button class="cart-btn sidebar-cart" onclick="openCart()">
@@ -222,51 +223,6 @@
     </div>
   </section>
 
-  <section class="reviews">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">Reviews</p>
-        <h2>What our customers say</h2>
-        <p>Real messages from families and hosts who have shared an Ennieskitchen meal.</p>
-      </div>
-      <div class="review-scroll" id="liveReviews"></div>
-
-      <div class="review-form-wrap">
-        <h3>Leave a review</h3>
-        <p>Ordered from us? Tell us how it went.</p>
-        <form class="form-grid full" id="reviewForm" onsubmit="submitReview(event)">
-          <div class="field">
-            <label>Your name <span class="req">*</span></label>
-            <input type="text" id="revName" maxlength="80" required>
-          </div>
-          <div class="field">
-            <label>Rating <span class="req">*</span></label>
-            <div class="star-picker" id="starPicker">
-              <button type="button" class="star-pick" onclick="setRating(1)" aria-label="1 star">★</button>
-              <button type="button" class="star-pick" onclick="setRating(2)" aria-label="2 stars">★</button>
-              <button type="button" class="star-pick" onclick="setRating(3)" aria-label="3 stars">★</button>
-              <button type="button" class="star-pick" onclick="setRating(4)" aria-label="4 stars">★</button>
-              <button type="button" class="star-pick" onclick="setRating(5)" aria-label="5 stars">★</button>
-            </div>
-            <input type="hidden" id="reviewRating" value="0">
-          </div>
-          <div class="field">
-            <label>Your review <span class="req">*</span></label>
-            <textarea id="revComment" maxlength="600" required></textarea>
-          </div>
-          <div class="field hp" aria-hidden="true">
-            <label>Website</label>
-            <input type="text" id="revWebsite" tabindex="-1" autocomplete="off">
-          </div>
-          <div class="field">
-            <button type="submit" class="btn btn-primary" id="reviewSubmitBtn">Submit review</button>
-            <p class="form-status" id="reviewStatus"></p>
-          </div>
-        </form>
-      </div>
-    </div>
-  </section>
-
   <section>
     <div class="wrap">
       <div class="section-head">
@@ -341,8 +297,5 @@
 <script src="js/nav.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/home.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="js/reviews-config.js"></script>
-<script src="js/reviews.js"></script>
 </body>
 </html>

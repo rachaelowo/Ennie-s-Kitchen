@@ -192,16 +192,24 @@ async function loadReviewsAdmin(){
   const avg = data.length ? (data.reduce((s,r)=>s + r.rating, 0) / data.length).toFixed(1) : '—';
   document.getElementById('statAvgRating').textContent = avg;
 
-  listEl.innerHTML = data.length ? data.map(r=>`
+  listEl.innerHTML = data.length ? data.map(r=>{
+    const media = Array.isArray(r.media) ? r.media.map(m =>
+      m.type === 'video'
+        ? `<video src="${escapeHTML(m.url)}" controls style="width:120px;height:80px;border-radius:6px;"></video>`
+        : `<a href="${escapeHTML(m.url)}" target="_blank"><img src="${escapeHTML(m.url)}" style="width:80px;height:80px;object-fit:cover;border-radius:6px;"></a>`
+    ).join('') : '';
+    return `
     <div class="admin-row">
       <div class="admin-row-main">
         <strong>${escapeHTML(r.name)}</strong> — ${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}
         <span class="admin-meta">${new Date(r.created_at).toLocaleString()}</span>
         <div class="admin-items">"${escapeHTML(r.comment)}"</div>
+        ${media ? `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">${media}</div>` : ''}
       </div>
       <button class="btn-delete" onclick="deleteReview('${r.id}')">Delete</button>
     </div>
-  `).join('') : '<p style="color:var(--ink-soft);font-size:14px;">No reviews yet.</p>';
+  `;
+  }).join('') : '<p style="color:var(--ink-soft);font-size:14px;">No reviews yet.</p>';
 }
 
 async function deleteReview(id){

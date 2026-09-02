@@ -4,9 +4,20 @@
 <meta charset="UTF-8">
 <script>(function(){try{var t=localStorage.getItem('ennieskitchen_theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cancellation &amp; Refund Policy — Ennieskitchen</title>
-<meta name="description" content="Cancellation and refund policy for orders placed with Ennieskitchen in Gardena, CA.">
-<link rel="canonical" href="https://rachaelowo.github.io/Ennie-s-Kitchen/cancellation-refunds.html">
+<title>Reviews — Ennieskitchen | Customer Reviews, Photos &amp; Videos</title>
+<meta name="description" content="Read reviews from Ennieskitchen customers, with photos and videos of their orders, or leave your own review of Nigerian food and catering in Gardena, CA.">
+<link rel="canonical" href="https://rachaelowo.github.io/Ennie-s-Kitchen/reviews.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ennieskitchen">
+<meta property="og:title" content="Reviews — Ennieskitchen | Customer Reviews, Photos &amp; Videos">
+<meta property="og:description" content="Read reviews from Ennieskitchen customers, with photos and videos of their orders.">
+<meta property="og:url" content="https://rachaelowo.github.io/Ennie-s-Kitchen/reviews.html">
+<meta property="og:image" content="https://rachaelowo.github.io/Ennie-s-Kitchen/images/logo.jpg">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Reviews — Ennieskitchen | Customer Reviews, Photos &amp; Videos">
+<meta name="twitter:description" content="Read reviews from Ennieskitchen customers, with photos and videos of their orders.">
+<meta name="twitter:image" content="https://rachaelowo.github.io/Ennie-s-Kitchen/images/logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -26,7 +37,7 @@
     <a href="about.html"><span class="nav-dot"></span>About</a>
     <a href="contact.html"><span class="nav-dot"></span>Contact</a>
     <a href="faq.html"><span class="nav-dot"></span>FAQ</a>
-    <a href="reviews.html"><span class="nav-dot"></span>Reviews</a>
+    <a href="reviews.html" class="active"><span class="nav-dot"></span>Reviews</a>
   </nav>
   <div class="sidebar-actions">
     <button class="cart-btn sidebar-cart" onclick="openCart()">
@@ -70,31 +81,55 @@
 
 <main class="main-content" id="mainContent">
 
-  <section style="padding-top:48px;">
-    <div class="wrap" style="max-width:720px;">
-      <p class="eyebrow">Policies</p>
-      <h1 style="font-size:32px;margin-bottom:8px;">Cancellation &amp; Refund Policy</h1>
-      <p style="color:var(--ink-soft);margin-bottom:32px;">Because everything at Ennieskitchen is cooked fresh to order, our cancellation and refund policy is designed around preparation time.</p>
+  <section class="reviews" style="padding-top:48px;">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Reviews</p>
+        <h1 style="font-size:32px;">What our customers say</h1>
+        <p>Real messages, photos and videos from families and hosts who have shared an Ennieskitchen meal.</p>
+      </div>
+      <div class="review-grid" id="liveReviews"></div>
 
-      <div class="terms-body">
-        <h3>Order Changes</h3>
-        <p>Customers should contact Ennieskitchen as soon as possible if they need to make changes to a confirmed order. Whether we can adjust items, sizes or the pickup time depends on how far along your order already is.</p>
-
-        <h3>Cancellations &amp; Refunds</h3>
-        <p>Cancellations made at least 24 hours before the scheduled preparation or pickup time may be eligible for a full refund.</p>
-        <p>Cancellations made less than 24 hours before the scheduled time are not eligible for a refund.</p>
-        <p>Once preparation has begun, an order cannot be cancelled or refunded.</p>
-
-        <h3>Catering Orders</h3>
-        <p>Catering orders require 48–72 hours minimum notice, and the same cancellation windows above apply relative to your scheduled event or pickup time. Larger events may have additional terms discussed at the time of booking.</p>
-
-        <h3>Order Cancelled by Ennieskitchen</h3>
-        <p>If Ennieskitchen needs to refuse or cancel an order before preparation has begun — for reasons such as ingredient availability or unforeseen circumstances — the customer will receive a full refund for the amount paid for that order.</p>
-
-        <h3>How to Request a Cancellation or Refund</h3>
-        <p>Reach out by phone or WhatsApp at <a href="tel:+13235786993">+1 (323) 578-6993</a>, or email <a href="mailto:Ennieskitchen259@gmail.com">Ennieskitchen259@gmail.com</a>, as soon as possible if your plans change.</p>
-
-        <p style="margin-top:24px;">This policy is part of, and should be read alongside, our full <a href="terms.html">Terms &amp; Conditions</a>.</p>
+      <div class="review-form-wrap">
+        <h3>Leave a review</h3>
+        <p>Ordered from us? Tell us how it went — photos and videos of your order are welcome.</p>
+        <form class="form-grid full" id="reviewForm" onsubmit="submitReview(event)">
+          <div class="field">
+            <label>Your name <span class="req">*</span></label>
+            <input type="text" id="revName" maxlength="80" required>
+          </div>
+          <div class="field">
+            <label>Rating <span class="req">*</span></label>
+            <div class="star-picker" id="starPicker">
+              <button type="button" class="star-pick" onclick="setRating(1)" aria-label="1 star">★</button>
+              <button type="button" class="star-pick" onclick="setRating(2)" aria-label="2 stars">★</button>
+              <button type="button" class="star-pick" onclick="setRating(3)" aria-label="3 stars">★</button>
+              <button type="button" class="star-pick" onclick="setRating(4)" aria-label="4 stars">★</button>
+              <button type="button" class="star-pick" onclick="setRating(5)" aria-label="5 stars">★</button>
+            </div>
+            <input type="hidden" id="reviewRating" value="0">
+          </div>
+          <div class="field">
+            <label>Your review <span class="req">*</span></label>
+            <textarea id="revComment" maxlength="600" required></textarea>
+          </div>
+          <div class="field">
+            <label>Photos (optional, up to 3, 30MB each)</label>
+            <input type="file" id="revPhotos" accept="image/*" multiple>
+          </div>
+          <div class="field">
+            <label>Video (optional, up to 30MB)</label>
+            <input type="file" id="revVideo" accept="video/*">
+          </div>
+          <div class="field hp" aria-hidden="true">
+            <label>Website</label>
+            <input type="text" id="revWebsite" tabindex="-1" autocomplete="off">
+          </div>
+          <div class="field">
+            <button type="submit" class="btn btn-primary" id="reviewSubmitBtn">Submit review</button>
+            <p class="form-status" id="reviewStatus"></p>
+          </div>
+        </form>
       </div>
     </div>
   </section>
@@ -149,5 +184,8 @@
 <script src="js/cart.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/theme.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/reviews-config.js"></script>
+<script src="js/reviews.js"></script>
 </body>
 </html>
