@@ -81,6 +81,29 @@ async function notifyBusinessOfOrder(paidByCard, name, phone, email, time){
   }
 }
 
+function formatPickupDate(dateStr){
+  if(!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric', year:'numeric'});
+}
+
+function getPickupLabel(){
+  const date = document.getElementById('coDate').value;
+  const time = document.getElementById('coTime').value.trim();
+  if(!date) return time || 'flexible';
+  return formatPickupDate(date) + (time ? ' — ' + time : '');
+}
+
+function setMinPickupDate(){
+  const dateInput = document.getElementById('coDate');
+  if(!dateInput) return;
+  const min = new Date(Date.now() + 24*3600*1000);
+  const yyyy = min.getFullYear();
+  const mm = String(min.getMonth()+1).padStart(2,'0');
+  const dd = String(min.getDate()).padStart(2,'0');
+  dateInput.min = `${yyyy}-${mm}-${dd}`;
+}
+
 function checkoutSubtotal(){ return cartTotal(); }
 function checkoutTax(){ return checkoutSubtotal() * TAX_RATE; }
 function checkoutGrandTotal(){ return checkoutSubtotal() + checkoutTax(); }
@@ -180,8 +203,9 @@ async function submitSquarePayment(){
   const name = document.getElementById('coName').value.trim();
   const phone = document.getElementById('coPhone').value.trim();
   const email = document.getElementById('coEmail').value.trim();
-  if(!name || !phone || !email){
-    alert('Please enter your name, phone number and email address.');
+  const date = document.getElementById('coDate').value;
+  if(!name || !phone || !email || !date){
+    alert('Please enter your name, phone number, email address and pickup date.');
     return;
   }
 
@@ -229,11 +253,12 @@ function sendOrderEmail(paidByCard){
   const name = document.getElementById('coName').value.trim();
   const phone = document.getElementById('coPhone').value.trim();
   const email = document.getElementById('coEmail').value.trim();
-  const time = document.getElementById('coTime').value.trim();
-  if(!name || !phone || !email){
-    alert('Please enter your name, phone number and email address.');
+  const date = document.getElementById('coDate').value;
+  if(!name || !phone || !email || !date){
+    alert('Please enter your name, phone number, email address and pickup date.');
     return;
   }
+  const time = getPickupLabel();
   saveOrderRecord(paidByCard, name, phone, email, time);
   notifyBusinessOfOrder(paidByCard, name, phone, email, time);
   sendReceiptEmail(paidByCard, name, email, phone, time);
@@ -254,11 +279,12 @@ function sendOrderWhatsApp(){
   const name = document.getElementById('coName').value.trim();
   const phone = document.getElementById('coPhone').value.trim();
   const email = document.getElementById('coEmail').value.trim();
-  const time = document.getElementById('coTime').value.trim();
-  if(!name || !phone || !email){
-    alert('Please enter your name, phone number and email address.');
+  const date = document.getElementById('coDate').value;
+  if(!name || !phone || !email || !date){
+    alert('Please enter your name, phone number, email address and pickup date.');
     return;
   }
+  const time = getPickupLabel();
   saveOrderRecord(false, name, phone, email, time);
   notifyBusinessOfOrder(false, name, phone, email, time);
 
@@ -278,4 +304,5 @@ function sendOrderWhatsApp(){
 document.addEventListener('DOMContentLoaded', ()=>{
   renderCheckout();
   renderPickupNotes();
+  setMinPickupDate();
 });
