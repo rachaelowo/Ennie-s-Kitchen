@@ -3,4 +3,4 @@ Allow: /
 Disallow: /checkout.html
 Disallow: /admin.html
 
-Sitemap: https://rachaelowo.github.io/Ennie-s-Kitchen/sitemap.xml
+Sitemap: https://eatwithennieskitchen.com/sitemap.xml
