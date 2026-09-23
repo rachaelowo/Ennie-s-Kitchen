@@ -40,7 +40,15 @@
     <div class="field" style="margin-bottom:10px;"><label>Email</label><input type="email" id="adminEmail" required></div>
     <div class="field" style="margin-bottom:14px;"><label>Password</label><input type="password" id="adminPassword" required></div>
     <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Log in</button>
+    <p style="text-align:center;margin-top:10px;"><a href="#" onclick="adminForgotPassword(event)" style="font-size:13px;color:var(--ink-soft);">Forgot password?</a></p>
     <p class="form-status" id="loginStatus"></p>
+  </form>
+
+  <form id="resetPasswordBox" class="hidden" onsubmit="adminResetPassword(event)" style="max-width:360px;margin:80px auto;">
+    <h1 style="font-size:22px;margin-bottom:16px;text-align:center;">Set a new password</h1>
+    <div class="field" style="margin-bottom:14px;"><label>New password</label><input type="password" id="newPassword" required minlength="6"></div>
+    <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Update password</button>
+    <p class="form-status" id="resetStatus"></p>
   </form>
 
   <div id="adminDash" class="hidden">

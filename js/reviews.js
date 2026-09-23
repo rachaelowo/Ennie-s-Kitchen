@@ -131,6 +131,7 @@ async function submitReview(e) {
     try {
       media = await Promise.all(allFiles.map(uploadReviewMedia));
     } catch (err) {
+      console.error("Review media upload failed:", err);
       submitBtn.disabled = false;
       status.textContent = "Could not upload media — please try again.";
       status.className = "form-status error";
@@ -146,6 +147,7 @@ async function submitReview(e) {
   submitBtn.disabled = false;
 
   if (error) {
+    console.error("Review submit failed:", error);
     status.textContent = "Something went wrong — please try again.";
     status.className = "form-status error";
     return;

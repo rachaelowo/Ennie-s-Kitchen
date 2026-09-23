@@ -54,6 +54,52 @@ async function adminLogout(){
   showLoggedOut();
 }
 
+async function adminForgotPassword(e){
+  e.preventDefault();
+  const status = document.getElementById('loginStatus');
+  if(!adminSupabase){
+    status.textContent = 'Admin login is not configured yet.';
+    status.className = 'form-status error';
+    return;
+  }
+  const email = document.getElementById('adminEmail').value.trim();
+  if(!email){
+    status.textContent = 'Enter your email above, then click "Forgot password?"';
+    status.className = 'form-status error';
+    return;
+  }
+  status.textContent = 'Sending reset link...';
+  status.className = 'form-status';
+  const { error } = await adminSupabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + window.location.pathname,
+  });
+  if(error){
+    status.textContent = error.message;
+    status.className = 'form-status error';
+    return;
+  }
+  status.textContent = 'If that email has an admin account, a reset link has been sent.';
+  status.className = 'form-status success';
+}
+
+async function adminResetPassword(e){
+  e.preventDefault();
+  const status = document.getElementById('resetStatus');
+  const password = document.getElementById('newPassword').value;
+  status.textContent = 'Updating password...';
+  status.className = 'form-status';
+  const { error } = await adminSupabase.auth.updateUser({ password });
+  if(error){
+    status.textContent = error.message;
+    status.className = 'form-status error';
+    return;
+  }
+  status.textContent = 'Password updated.';
+  status.className = 'form-status success';
+  document.getElementById('resetPasswordBox').classList.add('hidden');
+  showLoggedIn();
+}
+
 async function loadDashboard(){
   await Promise.all([loadOrders(), loadReviewsAdmin(), loadCateringRequests()]);
 }
@@ -216,6 +262,16 @@ async function deleteReview(id){
   if(!confirm('Delete this review? This cannot be undone.')) return;
   await adminSupabase.from('reviews').delete().eq('id', id);
   loadReviewsAdmin();
+}
+
+if(adminSupabase){
+  adminSupabase.auth.onAuthStateChange((event) => {
+    if(event === 'PASSWORD_RECOVERY'){
+      document.getElementById('loginBox').classList.add('hidden');
+      document.getElementById('adminDash').classList.add('hidden');
+      document.getElementById('resetPasswordBox').classList.remove('hidden');
+    }
+  });
 }
 
 document.addEventListener('DOMContentLoaded', checkSession);
