@@ -104,7 +104,7 @@ const FAQS = [
 /* ---------------- SHARED HELPERS ---------------- */
 /* Gardena, CA combined sales tax rate (CDTFA, 2026). Confirm with your
    accountant/CDTFA if this ever needs to change. */
-const TAX_RATE = 0.105;
+const TAX_RATE = 0.1125;
 
 function money(n){ return "$" + n.toFixed(2); }
 
