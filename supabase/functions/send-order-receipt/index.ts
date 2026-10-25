@@ -28,6 +28,7 @@ interface OrderItem {
   size: string;
   qty: number;
   price: number;
+  thanksgiving?: boolean;
 }
 
 Deno.serve(async (req) => {
@@ -38,7 +39,7 @@ Deno.serve(async (req) => {
   try {
     const {
       customerEmail, customerName, phone, pickupTime,
-      items, subtotal, tax, total, paymentMethod,
+      items, subtotal, discount, tax, total, paymentMethod,
     } = await req.json();
 
     if (!customerEmail || typeof customerEmail !== "string" || !EMAIL_RE.test(customerEmail)) {
@@ -56,7 +57,7 @@ Deno.serve(async (req) => {
 
     const money = (n: number) => `$${Number(n).toFixed(2)}`;
     const rows = (items as OrderItem[]).map(i =>
-      `<tr><td style="padding:4px 0;">${escapeHtml(i.name)} (${escapeHtml(i.size)}) x${escapeHtml(String(i.qty))}</td><td style="text-align:right;">${money(i.price * i.qty)}</td></tr>`
+      `<tr><td style="padding:4px 0;">${escapeHtml(i.name)} (${escapeHtml(i.size)})${i.thanksgiving ? " [Thanksgiving]" : ""} x${escapeHtml(String(i.qty))}</td><td style="text-align:right;">${money(i.price * i.qty)}</td></tr>`
     ).join("");
 
     const html = `
@@ -66,6 +67,7 @@ Deno.serve(async (req) => {
         <table style="width:100%;border-collapse:collapse;margin:16px 0;">
           ${rows}
           <tr><td style="padding-top:8px;">Subtotal</td><td style="text-align:right;padding-top:8px;">${money(subtotal)}</td></tr>
+          ${Number(discount) > 0 ? `<tr><td>Discount</td><td style="text-align:right;">-${money(discount)}</td></tr>` : ""}
           <tr><td>Sales tax</td><td style="text-align:right;">${money(tax)}</td></tr>
           <tr><td style="font-weight:bold;padding-top:6px;border-top:1px solid #E4D5C0;">Total</td><td style="text-align:right;font-weight:bold;padding-top:6px;border-top:1px solid #E4D5C0;">${money(total)}</td></tr>
         </table>

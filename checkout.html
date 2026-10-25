@@ -78,6 +78,7 @@
     <div class="wrap">
       <h1 style="font-size:30px;margin-bottom:24px;text-align:center;">Checkout</h1>
       <div class="checkout-box">
+        <p class="hidden" id="checkoutDroppedNote" style="font-size:13.5px;color:var(--ink-soft);margin-bottom:14px;">Thanksgiving ordering has closed, so the Thanksgiving items were removed from your cart.</p>
         <div id="checkoutEmpty" class="drawer-empty hidden">
           <p>Your cart is empty.</p>
           <a class="btn btn-primary" style="margin-top:16px;" href="menu.html">Browse the menu</a>
@@ -87,11 +88,13 @@
             <h5>Your order</h5>
             <div id="checkoutLines"></div>
             <div class="co-line"><span>Subtotal</span><span id="checkoutSubtotal">$0.00</span></div>
+            <div class="co-line co-discount hidden" id="checkoutDiscountRow"><span id="checkoutDiscountLabel">Discount</span><span id="checkoutDiscount">−$0.00</span></div>
             <div class="co-line"><span>Sales tax (11.25%)</span><span id="checkoutTax">$0.00</span></div>
             <div class="co-total"><span>Total</span><span id="checkoutTotal">$0.00</span></div>
           </div>
           <div class="co-section">
             <h5>Pickup details</h5>
+            <div class="tg-info hidden" id="checkoutThanksgivingNote" style="margin:0 0 12px;"></div>
             <div class="field" style="margin-bottom:10px;"><input type="text" id="coName" placeholder="Full name"></div>
             <div class="field" style="margin-bottom:10px;"><input type="tel" id="coPhone" placeholder="Phone number"></div>
             <div class="field" style="margin-bottom:10px;"><input type="email" id="coEmail" placeholder="Email (for your receipt)"></div>

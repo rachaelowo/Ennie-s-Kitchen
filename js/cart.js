@@ -14,12 +14,25 @@ function saveCart(){
   try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); }catch(e){}
 }
 
-let cart = loadCart(); // {name, size, price, qty}
+let cart = loadCart(); // {name, size, price, qty, thanksgiving?}
 
-function addToCart(name, sizeLabel, price, qty){
-  const existing = cart.find(l => l.name===name && l.size===sizeLabel);
+// Thanksgiving items left in a saved cart after ordering closes are dropped;
+// checkout reads the flag to explain where they went.
+const TG_DROPPED_KEY = 'ennieskitchen_tg_dropped';
+if(!thanksgivingOpen() && cart.some(l=>l.thanksgiving)){
+  cart = cart.filter(l=>!l.thanksgiving);
+  saveCart();
+  try{ sessionStorage.setItem(TG_DROPPED_KEY, '1'); }catch(e){}
+}
+
+function addToCart(name, sizeLabel, price, qty, thanksgiving){
+  const existing = cart.find(l => l.name===name && l.size===sizeLabel && !!l.thanksgiving===!!thanksgiving);
   if(existing){ existing.qty += qty; }
-  else{ cart.push({name, size:sizeLabel, price, qty}); }
+  else{
+    const line = {name, size:sizeLabel, price, qty};
+    if(thanksgiving) line.thanksgiving = true;
+    cart.push(line);
+  }
   saveCart();
   renderCart();
   openCart();
@@ -48,6 +61,16 @@ function cartTotal(){
   return cart.reduce((s,l)=> s + l.price*l.qty, 0);
 }
 
+function isThanksgivingOrder(){ return cart.some(l=>l.thanksgiving); }
+
+function discountPercent(){
+  return (promoActive() ? PROMO.percent : 0) + (isThanksgivingOrder() ? THANKSGIVING.extraPercent : 0);
+}
+
+function cartDiscount(){
+  return Math.round(cartTotal() * discountPercent()) / 100;
+}
+
 function renderCart(){
   const count = cart.reduce((s,l)=>s+l.qty,0);
   const countEl = document.getElementById('cartCount');
@@ -72,7 +95,7 @@ function renderCart(){
       itemsEl.innerHTML = cart.map((l,i)=>`
         <div class="cart-line">
           <div>
-            <h5>${l.name}</h5>
+            <h5>${l.name}${l.thanksgiving ? ' <span class="tg-tag">Thanksgiving</span>' : ''}</h5>
             <div class="meta">${l.size} × ${l.qty}</div>
             <div class="remove" onclick="removeLine(${i})"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>Remove</div>
           </div>
@@ -81,6 +104,16 @@ function renderCart(){
       `).join('');
       const drawerTotalEl = document.getElementById('drawerTotal');
       if(drawerTotalEl) drawerTotalEl.textContent = money(cartTotal());
+      let promoEl = document.getElementById('drawerPromo');
+      if(!promoEl){
+        promoEl = document.createElement('p');
+        promoEl.id = 'drawerPromo';
+        promoEl.className = 'drawer-promo';
+        footEl.querySelector('.total-row').after(promoEl);
+      }
+      const pct = discountPercent();
+      promoEl.textContent = pct ? `${pct}% off (−${money(cartDiscount())}) applied at checkout` : '';
+      promoEl.classList.toggle('hidden', !pct);
     }
   }
 

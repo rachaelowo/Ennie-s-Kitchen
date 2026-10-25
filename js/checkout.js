@@ -45,6 +45,7 @@ async function sendReceiptEmail(paidByCard, name, email, phone, time){
         pickupTime: time || 'flexible',
         items: cart,
         subtotal: checkoutSubtotal(),
+        discount: checkoutDiscount(),
         tax: checkoutTax(),
         total: checkoutGrandTotal(),
         paymentMethod: paidByCard ? 'card' : selectedPaymentMethod,
@@ -71,6 +72,7 @@ async function notifyBusinessOfOrder(paidByCard, name, phone, email, time){
         pickupTime: time || 'flexible',
         items: cart,
         subtotal: checkoutSubtotal(),
+        discount: checkoutDiscount(),
         tax: checkoutTax(),
         total: checkoutGrandTotal(),
         paymentMethod: paidByCard ? 'card' : selectedPaymentMethod,
@@ -105,8 +107,34 @@ function setMinPickupDate(){
 }
 
 function checkoutSubtotal(){ return cartTotal(); }
-function checkoutTax(){ return checkoutSubtotal() * TAX_RATE; }
-function checkoutGrandTotal(){ return checkoutSubtotal() + checkoutTax(); }
+function checkoutDiscount(){ return cartDiscount(); }
+function checkoutTax(){ return (checkoutSubtotal() - checkoutDiscount()) * TAX_RATE; }
+function checkoutGrandTotal(){ return checkoutSubtotal() - checkoutDiscount() + checkoutTax(); }
+
+function discountSummary(){
+  if(!checkoutDiscount()) return '';
+  const label = isThanksgivingOrder() ? 'Thanksgiving discount' : 'Discount';
+  return `${label} (${discountPercent()}%): -${money(checkoutDiscount())}`;
+}
+
+function renderThanksgivingPickup(){
+  const dateInput = document.getElementById('coDate');
+  const note = document.getElementById('checkoutThanksgivingNote');
+  if(!dateInput || !note) return;
+  const tg = isThanksgivingOrder();
+  note.classList.toggle('hidden', !tg);
+  const regularNote = document.getElementById('checkoutPickupNote');
+  if(regularNote) regularNote.classList.toggle('hidden', tg);
+  dateInput.readOnly = tg;
+  if(tg){
+    note.innerHTML = `Thanksgiving order — pickup <b>${formatPickupDate(THANKSGIVING.pickupDate)}</b> in Gardena. Your whole order is ready that day.`;
+    dateInput.min = dateInput.max = dateInput.value = THANKSGIVING.pickupDate;
+  } else if(dateInput.max){
+    dateInput.removeAttribute('max');
+    dateInput.value = '';
+    setMinPickupDate();
+  }
+}
 
 function renderCheckout(){
   const empty = document.getElementById('checkoutEmpty');
@@ -122,6 +150,12 @@ function renderCheckout(){
       <div class="co-line"><span>${l.name} (${l.size}) × ${l.qty}</span><span>${money(l.price*l.qty)}</span></div>
     `).join('');
     document.getElementById('checkoutSubtotal').textContent = money(checkoutSubtotal());
+    const discountRow = document.getElementById('checkoutDiscountRow');
+    discountRow.classList.toggle('hidden', !checkoutDiscount());
+    document.getElementById('checkoutDiscountLabel').textContent =
+      `${isThanksgivingOrder() ? 'Thanksgiving discount' : 'Discount'} (${discountPercent()}%)`;
+    document.getElementById('checkoutDiscount').textContent = '−' + money(checkoutDiscount());
+    renderThanksgivingPickup();
     document.getElementById('checkoutTax').textContent = money(checkoutTax());
     document.getElementById('checkoutTotal').textContent = money(checkoutGrandTotal());
     const qrAmount = document.getElementById('qrAmount');
@@ -263,10 +297,13 @@ function sendOrderEmail(paidByCard){
   notifyBusinessOfOrder(paidByCard, name, phone, email, time);
   sendReceiptEmail(paidByCard, name, email, phone, time);
   let body = `Hi Ennieskitchen! I'd like to place an order:\n\n`;
+  if(isThanksgivingOrder()) body += `THANKSGIVING ORDER — pickup ${formatPickupDate(THANKSGIVING.pickupDate)}\n\n`;
   cart.forEach(l=>{
     body += `${l.name} (${l.size}) x${l.qty} - ${money(l.price*l.qty)}\n`;
   });
-  body += `\nSubtotal: ${money(checkoutSubtotal())}\nSales tax: ${money(checkoutTax())}\nTotal: ${money(checkoutGrandTotal())}`;
+  body += `\nSubtotal: ${money(checkoutSubtotal())}`;
+  if(checkoutDiscount()) body += `\n${discountSummary()}`;
+  body += `\nSales tax: ${money(checkoutTax())}\nTotal: ${money(checkoutGrandTotal())}`;
   body += `\n\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nPickup time: ${time || 'flexible'}`;
   body += `\nPayment: Paid by card via Square`;
 
@@ -288,21 +325,47 @@ function sendOrderWhatsApp(){
   saveOrderRecord(false, name, phone, email, time);
   notifyBusinessOfOrder(false, name, phone, email, time);
 
-  let msg = `Hi Ennieskitchen! I'd like to place an order:%0A%0A`;
-  cart.forEach(l=>{
-    msg += `${l.name} (${l.size}) x${l.qty} - ${money(l.price*l.qty)}%0A`;
-  });
-  msg += `%0ASubtotal: ${money(checkoutSubtotal())}%0ASales tax: ${money(checkoutTax())}%0ATotal: ${money(checkoutGrandTotal())}`;
-  msg += `%0A%0AName: ${name}%0APhone: ${phone}%0AEmail: ${email}%0APickup time: ${time || 'flexible'}`;
-  msg += `%0APayment method: ${selectedPaymentMethod}`;
-  msg += `%0A%0AI'll send a screenshot of my payment confirmation next.`;
+  let msg = `Hi Ennieskitchen! I'd like to place an order:
 
-  window.open(`https://wa.me/13235786993?text=${msg}`, '_blank');
+`;
+  if(isThanksgivingOrder()) msg += `THANKSGIVING ORDER — pickup ${formatPickupDate(THANKSGIVING.pickupDate)}
+
+`;
+  cart.forEach(l=>{
+    msg += `${l.name} (${l.size}) x${l.qty} - ${money(l.price*l.qty)}
+`;
+  });
+  msg += `
+Subtotal: ${money(checkoutSubtotal())}`;
+  if(checkoutDiscount()) msg += `
+${discountSummary()}`;
+  msg += `
+Sales tax: ${money(checkoutTax())}
+Total: ${money(checkoutGrandTotal())}`;
+  msg += `
+
+Name: ${name}
+Phone: ${phone}
+Email: ${email}
+Pickup time: ${time || 'flexible'}`;
+  msg += `
+Payment method: ${selectedPaymentMethod}`;
+  msg += `
+
+I'll send a screenshot of my payment confirmation next.`;
+
+  window.open(`https://wa.me/13235786993?text=${encodeURIComponent(msg)}`, '_blank');
   clearCart();
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
+  setMinPickupDate();
   renderCheckout();
   renderPickupNotes();
-  setMinPickupDate();
+  try{
+    if(sessionStorage.getItem(TG_DROPPED_KEY)){
+      document.getElementById('checkoutDroppedNote').classList.remove('hidden');
+      sessionStorage.removeItem(TG_DROPPED_KEY);
+    }
+  }catch(e){}
 });

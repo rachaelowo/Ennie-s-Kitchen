@@ -201,6 +201,8 @@ async function confirmOrderAndSendReceipt(id){
         pickupTime: order.pickup_time,
         items: order.items,
         subtotal: order.subtotal,
+        // Discount isn't stored separately: total = subtotal - discount + tax.
+        discount: Math.max(0, Math.round((Number(order.subtotal) + Number(order.tax) - Number(order.total)) * 100) / 100),
         tax: order.tax,
         total: order.total,
         paymentMethod: order.payment_method,

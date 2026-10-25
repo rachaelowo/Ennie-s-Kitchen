@@ -47,6 +47,68 @@ const MENU = [
 
 const CATEGORIES = ["All", ...new Set(MENU.map(m=>m.cat))];
 
+/* ---------------- PROMOTIONS ----------------
+   Dates are Pacific time and inclusive (the promo runs through the end
+   of that day). Discounts come off the subtotal, before sales tax. */
+const PROMO = {percent:10, endsOn:"2026-11-30"};
+
+const THANKSGIVING = {
+  extraPercent:5,            // on top of PROMO, for any order with Thanksgiving items
+  ordersCloseOn:"2026-11-20",
+  pickupDate:"2026-11-26",
+  soldOut:false,             // flip to true to close ordering early once at capacity
+};
+
+/* Thanksgiving menu items reuse the regular menu's sizes and prices.
+   `img` points variants at the closest regular dish photo. */
+function fromMenu(name, cat, overrides){
+  const base = MENU.find(m=>m.name===name);
+  return {...base, cat, img:name, ...overrides};
+}
+const THANKSGIVING_MENU = [
+  fromMenu("Basmati Fried Rice", "Rice & Pasta"),
+  fromMenu("Asun Rice", "Rice & Pasta"),
+  fromMenu("Creamy Alfredo Pasta", "Rice & Pasta", {name:"Suya Alfredo Pasta"}),
+  fromMenu("Jollof Rice", "Rice & Pasta"),
+  fromMenu("Jollof Pasta", "Rice & Pasta", {name:"Jollof Spaghetti with Shredded Beef"}),
+  fromMenu("Ofada Sauce", "Soups"),
+  fromMenu("Efo Riro", "Soups"),
+  fromMenu("Egusi", "Soups"),
+  fromMenu("Goat Meat Pepper Soup", "Soups"),
+  fromMenu("Peppered Chicken", "Proteins", {name:"Peppered Hard Chicken"}),
+  fromMenu("Peppered Beef", "Proteins"),
+  fromMenu("Peppered Turkey", "Proteins", {name:"Peppered Turkey Wings"}),
+  fromMenu("Peppered Fish", "Proteins"),
+  fromMenu("Gizdodo", "Sides & Small Chop"),
+  fromMenu("Moi Moi with Protein", "Sides & Small Chop", {name:"Moi Moi with Egg & Corned Beef"}),
+  fromMenu("Meat Pie", "Sides & Small Chop"),
+  fromMenu("Fish Roll", "Sides & Small Chop"),
+  fromMenu("Samosa", "Sides & Small Chop"),
+];
+
+function todayPacific(){
+  return new Intl.DateTimeFormat('en-CA', {timeZone:'America/Los_Angeles'}).format(new Date());
+}
+function promoActive(){ return todayPacific() <= PROMO.endsOn; }
+function thanksgivingOpen(){ return !THANKSGIVING.soldOut && todayPacific() <= THANKSGIVING.ordersCloseOn; }
+
+function shortDate(iso){
+  return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric'});
+}
+
+function renderPromoBanner(){
+  const main = document.getElementById('mainContent');
+  if(!main || !promoActive()) return;
+  const tg = thanksgivingOpen() && !document.body.classList.contains('page-thanksgiving');
+  const banner = document.createElement('div');
+  banner.className = 'promo-banner';
+  banner.innerHTML = tg
+    ? `<b>${PROMO.percent}% off everything through ${shortDate(PROMO.endsOn)}</b> · Thanksgiving orders get ${PROMO.percent + THANKSGIVING.extraPercent}% off — <a href="thanksgiving.html">order by ${shortDate(THANKSGIVING.ordersCloseOn)} →</a>`
+    : `<b>${PROMO.percent}% off everything through ${shortDate(PROMO.endsOn)}</b> · applied automatically at checkout`;
+  main.prepend(banner);
+}
+document.addEventListener('DOMContentLoaded', renderPromoBanner);
+
 /* ---------------- QUICK-START SPREADS ---------------- */
 const SPREADS = [
   {
@@ -134,8 +196,8 @@ function slugify(name){
 
 const PLUS_ICON = `<svg class="icon icon-bump" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
 
-function dishImg(name, idx, className){
-  const slug = slugify(name);
+function dishImg(name, idx, className, imgName){
+  const slug = slugify(imgName || name);
   const color = dishColor(idx);
   return `<div class="${className}" style="background:linear-gradient(135deg,${color}55,${color}22);">
     <img src="images/${slug}.jpg" alt="${name}" loading="lazy" onerror="this.remove()">

@@ -1,9 +1,13 @@
-/* ---------------- MENU PAGE ---------------- */
+/* ---------------- MENU PAGE ----------------
+   thanksgiving.html reuses this script with THANKSGIVING_MENU. */
+const IS_THANKSGIVING_PAGE = document.body.classList.contains('page-thanksgiving');
+const PAGE_MENU = IS_THANKSGIVING_PAGE ? THANKSGIVING_MENU : MENU;
+const PAGE_CATEGORIES = ["All", ...new Set(PAGE_MENU.map(m=>m.cat))];
 let activeCat = "All";
 let searchTerm = "";
 
 function renderCatPills(){
-  document.getElementById('catPills').innerHTML = CATEGORIES.map(c=>
+  document.getElementById('catPills').innerHTML = PAGE_CATEGORIES.map(c=>
     `<button class="pill ${c===activeCat?'active':''}" onclick="setCat('${c}')">${c}</button>`
   ).join('');
 }
@@ -22,7 +26,7 @@ let renderedItems = [];
 
 function renderMenuList(){
   const q = searchTerm.trim().toLowerCase();
-  const items = MENU.filter(m=>
+  const items = PAGE_MENU.filter(m=>
     (activeCat==="All" || m.cat===activeCat) &&
     (!q || m.name.toLowerCase().includes(q))
   );
@@ -54,7 +58,7 @@ function renderMenuList(){
     const minQty = m.minQty || 1;
     return `
       <div class="menu-item">
-        ${dishImg(m.name, i, 'menu-item-photo')}
+        ${dishImg(m.name, i, 'menu-item-photo', m.img)}
         <div class="menu-item-top">
           <h4>${m.name}</h4>
           <span class="cat-label">${m.cat}</span>
@@ -107,10 +111,17 @@ function addFromMenu(id, itemIndex, minQty){
     sizeLabel += ' — ' + protein[0];
     price += protein[1];
   }
-  addToCart(m.name, sizeLabel, price, qty);
+  addToCart(m.name, sizeLabel, price, qty, IS_THANKSGIVING_PAGE);
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
+  if(IS_THANKSGIVING_PAGE && !thanksgivingOpen()){
+    document.getElementById('tgOrdering').classList.add('hidden');
+    document.getElementById('tgClosed').classList.remove('hidden');
+    return;
+  }
+  const tgCallout = document.getElementById('tgCallout');
+  if(tgCallout && thanksgivingOpen()) tgCallout.classList.remove('hidden');
   renderCatPills();
   renderMenuList();
   renderPickupNotes();
