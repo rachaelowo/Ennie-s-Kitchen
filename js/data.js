@@ -6,8 +6,8 @@ const MENU = [
   {name:"Native Rice", cat:"Rice", sizes:[["Quarter Tray",55],["Half Tray",125],["Large Tray",240]]},
   {name:"Basmati Seafood Fried Rice", cat:"Rice", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",240]]},
   {name:"Steamed White Rice", cat:"Rice", sizes:[["Quarter Tray",20],["Half Tray",40],["Large Tray",70]]},
-  {name:"Egusi", cat:"Nigerian Soups", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",280]], proteins:[["Beef",0],["Fish",0],["Chicken",0],["Goat Meat",10]], featured:true},
-  {name:"Efo Riro", cat:"Nigerian Soups", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",300]], proteins:[["Beef",0],["Fish",0],["Chicken",0],["Goat Meat",10]], featured:true},
+  {name:"Egusi", cat:"Nigerian Soups", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",280]], proteins:[["Beef",0],["Fish",0],["Chicken",0],["Turkey",0],["Goat Meat",10]], featured:true},
+  {name:"Efo Riro", cat:"Nigerian Soups", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",300]], proteins:[["Beef",0],["Fish",0],["Chicken",0],["Turkey",0],["Goat Meat",10]], featured:true},
   {name:"Okra", cat:"Nigerian Soups", sizes:[["Quarter Tray",70],["Half Tray",130],["Large Tray",260]], proteins:[["Beef",0],["Fish",0],["Chicken",0],["Goat Meat",10]]},
   {name:"Ogbono", cat:"Nigerian Soups", sizes:[["Quarter Tray",70],["Half Tray",150],["Large Tray",300]]},
   {name:"Fisherman Soup", cat:"Nigerian Soups", sizes:[["Quarter Tray",100],["Half Tray",180],["Large Tray",350]]},
@@ -36,6 +36,8 @@ const MENU = [
   {name:"Gizdodo", cat:"Sides", sizes:[["Quarter Tray",55],["Half Tray",110],["Large Tray",240]]},
   {name:"Nigerian Salad", cat:"Sides", sizes:[["Quarter Tray",40],["Half Tray",60],["Large Tray",120]]},
   {name:"Plantain", cat:"Sides", sizes:[["Quarter Tray",40],["Half Tray",60],["Large Tray",120]]},
+  {name:"Stewed Beans", cat:"Sides", sizes:[["Quarter Tray",50],["Half Tray",70],["Large Tray",140]]},
+  {name:"Beans with Corn (Adalu)", cat:"Sides", sizes:[["Quarter Tray",55],["Half Tray",80],["Large Tray",150]]},
   {name:"Moi Moi with Protein", cat:"Sides", sizes:[["12 Pieces",84]], featured:true},
   {name:"Plain Moi Moi", cat:"Sides", sizes:[["12 Pieces",72]]},
   {name:"Meat Pie", cat:"Small Chops", sizes:[["12 Pieces",30]]},
@@ -103,7 +105,7 @@ function renderPromoBanner(){
   const banner = document.createElement('div');
   banner.className = 'promo-banner';
   banner.innerHTML = tg
-    ? `<b>${PROMO.percent}% off everything through ${shortDate(PROMO.endsOn)}</b> · Thanksgiving orders get ${PROMO.percent + THANKSGIVING.extraPercent}% off — <a href="thanksgiving.html">order by ${shortDate(THANKSGIVING.ordersCloseOn)} →</a>`
+    ? `<b>${PROMO.percent}% off everything through ${shortDate(PROMO.endsOn)}</b> · Thanksgiving orders get ${PROMO.percent + THANKSGIVING.extraPercent}% off <a href="thanksgiving.html">Order by ${shortDate(THANKSGIVING.ordersCloseOn)} →</a>`
     : `<b>${PROMO.percent}% off everything through ${shortDate(PROMO.endsOn)}</b> · applied automatically at checkout`;
   main.prepend(banner);
 }
